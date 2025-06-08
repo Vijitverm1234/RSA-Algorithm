@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSA Algorithm Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            background: var(--bg-color);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        :root {
+            --bg-color: #f7f7fa;
+            --card-bg: #ffffff;
+            --text-color: #1a202c;
+            --accent-color: #5b21b6;
+            --accent-hover: #4c1d95;
+            --border-color: #e2e8f0;
+            --error-color: #e53e3e;
+        }
+
+        body.dark-mode {
+            --bg-color: #1a202c;
+            --card-bg: #2d3748;
+            --text-color: #e2e8f0;
+            --border-color: #4a5568;
+        }
+
+        h1 {
+            color: var(--text-color);
+            font-size: 2.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            letter-spacing: -0.025em;
+        }
+
+        .container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 960px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            background: var(--accent-color);
+            color: #ffffff;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1;
+            transition: background 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-hover);
+        }
+
+        .description {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--card-bg);
+            border-radius: 10px;
+            border: 3px solid var(--border-color);
+        }
+
+        .description h2 {
+            color: var(--text-color);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .description p, .description ul {
+            color: var(--text-color);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        .description ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .description ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.75rem;
+        }
+
+        label {
+            display: block;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.875rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: var(--card-bg);
+            color: var(--text-color);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px rgba(91, 33, 182, 0.2);
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent-color);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        button:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(91, 33, 182, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #steps, #result {
+            margin-top: 2rem;
+            padding: 1.75rem;
+            background: var(--card-bg);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        #steps h3, #result h3 {
+            color: var(--text-color);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        #steps p, #result p {
+            color: var(--text-color);
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 0.75rem;
+        }
+
+        .error {
+            color: var(--error-color);
+            font-weight: 600;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.25rem;
+            }
+
+            .container {
+                padding: 1.5rem;
+            }
+
+            .description h2 {
+                font-size: 1.3rem;
+            }
+
+            button {
+                font-size: 1rem;
+                padding: 0.875rem;
+            }
+
+            .theme-toggle {
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .description {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+    <h1>RSA Algorithm Demo</h1>
+    <div class="container">
+        <div class="description">
+            <h2>About RSA Algorithm</h2>
+            <p>The RSA algorithm, named after its inventors Rivest, Shamir, and Adleman, is a public-key cryptography system used for secure data transmission. It relies on the mathematical properties of large prime numbers to encrypt and decrypt messages, ensuring secure communication.</p>
+            <h3>Advantages</h3>
+            <ul>
+                <li><strong>Security:</strong> Relies on the difficulty of factoring large numbers, making it highly secure.</li>
+                <li><strong>Public-Key System:</strong> Enables secure communication without sharing private keys.</li>
+                <li><strong>Versatility:</strong> Supports encryption and digital signatures.</li>
+            </ul>
+            <h3>Disadvantages</h3>
+            <ul>
+                <li><strong>Speed:</strong> Slower than symmetric key algorithms due to complex computations.</li>
+                <li><strong>Key Management:</strong> Requires secure storage and distribution of private keys.</li>
+                <li><strong>Vulnerability:</strong> Susceptible to quantum computing attacks (e.g., Shor's algorithm).</li>
+            </ul>
+        </div>
+        <div class="input-group">
+            <label for="primeP">Prime Number P:</label>
+            <input type="number" id="primeP" placeholder="Enter prime number P">
+        </div>
+        <div class="input-group">
+            <label for="primeQ">Prime Number Q:</label>
+            <input type="number" id="primeQ" placeholder="Enter prime number Q">
+        </div>
+        <div class="input-group">
+            <label for="message">Message (Numeric):</label>
+            <input type="number" id="message" placeholder="Enter a number to encrypt">
+        </div>
+        <button onclick="runRSA()">Run RSA</button>
+        <div id="steps"></div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        function isPrime(num) {
+            if (num <= 1) return false;
+            for (let i = 2; i <= Math.sqrt(num); i++) {
+                if (num % i === 0) return false;
+            }
+            return true;
+        }
+
+        function gcd(a, b) {
+            while (b) {
+                a %= b;
+                [a, b] = [b, a];
+            }
+            return a;
+        }
+
+        function modInverse(e, phi) {
+            let m0 = phi, t, q;
+            let x0 = 0, x1 = 1;
+            if (phi === 1) return 0;
+            while (e > 1) {
+                q = Math.floor(e / phi);
+                [e, phi] = [phi, e % phi];
+                [x0, x1] = [x1 - q * x0, x0];
+            }
+            if (x1 < 0) x1 += m0;
+            return x1;
+        }
+
+        function runRSA() {
+            const p = parseInt(document.getElementById('primeP').value);
+            const q = parseInt(document.getElementById('primeQ').value);
+            const message = parseInt(document.getElementById('message').value);
+            const stepsDiv = document.getElementById('steps');
+            const resultDiv = document.getElementById('result');
+            stepsDiv.innerHTML = '';
+            resultDiv.innerHTML = '';
+
+            // Input validation
+            if (!p || !q || !message) {
+                stepsDiv.innerHTML = '<p class="error">Please enter all fields.</p>';
+                return;
+            }
+            if (!isPrime(p) || !isPrime(q)) {
+                stepsDiv.innerHTML = '<p class="error">P and Q must be prime numbers.</p>';
+                return;
+            }
+            if (message >= p * q) {
+                stepsDiv.innerHTML = '<p class="error">Message must be less than P * Q.</p>';
+                return;
+            }
+
+            // Step 1: Compute n
+            const n = p * q;
+            stepsDiv.innerHTML += `<h3>Step 1: Compute n</h3><p>n = p * q = ${p} * ${q} = ${n}</p>`;
+
+            // Step 2: Compute phi(n)
+            const phi = (p - 1) * (q - 1);
+            stepsDiv.innerHTML += `<h3>Step 2: Compute φ(n)</h3><p>φ(n) = (p-1) * (q-1) = (${p}-1) * (${q}-1) = ${phi}</p>`;
+
+            // Step 3: Choose e
+            let e = 2;
+            while (e < phi) {
+                if (gcd(e, phi) === 1) break;
+                e++;
+            }
+            stepsDiv.innerHTML += `<h3>Step 3: Choose e</h3><p>e = ${e} (coprime to φ(n) = ${phi})</p>`;
+
+            // Step 4: Compute d
+            const d = modInverse(e, phi);
+            stepsDiv.innerHTML += `<h3>Step 4: Compute d</h3><p>d = multiplicative inverse of e mod φ(n) = ${d}</p>`;
+
+            // Step 5: Encrypt
+            const encrypted = Math.pow(message, e) % n;
+            stepsDiv.innerHTML += `<h3>Step 5: Encrypt</h3><p>Ciphertext = (Message^e) mod n = (${message}^${e}) mod ${n} = ${encrypted}</p>`;
+
+            // Step 6: Decrypt
+            const decrypted = Math.pow(encrypted, d) % n;
+            stepsDiv.innerHTML += `<h3>Step 6: Decrypt</h3><p>Decrypted = (Ciphertext^d) mod n = (${encrypted}^${d}) mod ${n} = ${decrypted}</p>`;
+
+            // Display results
+            resultDiv.innerHTML = `<h3>Results</h3>
+                <p>Public Key: (e=${e}, n=${n})</p>
+                <p>Private Key: (d=${d}, n=${n})</p>
+                <p>Original Message: ${message}</p>
+                <p>Encrypted Message: ${encrypted}</p>
+                <p>Decrypted Message: ${decrypted}</p>`;
+        }
+    </script>
+</body>
+</html>
