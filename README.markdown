@@ -1,5 +1,9 @@
 # RSA Algorithm Demo
 
+<div allign="center">
+   <img width="927" alt="rsa" src="https://github.com/user-attachments/assets/886ac648-6916-4523-9562-809e5761fc25" />
+</div>
+
 ## Overview
 This project is a simple web-based demonstration of the RSA algorithm, a public-key cryptography system used for secure data transmission. The application allows users to input two prime numbers (P and Q) and a numeric message, then performs RSA encryption and decryption to showcase the algorithm's functionality.
 https://rsa-algorithm-compression.netlify.app/
@@ -29,11 +33,8 @@ https://rsa-algorithm-compression.netlify.app/
    ```bash
    git clone https://github.com/Vijitverm1234/RSA-Algorithm.git
    ```
-2. Navigate to the project directory:
-   ```bash
-   cd rsa-algorithm-demo
-   ```
-3. Open `index.html` in a web browser to run the application locally.
+
+2. Open `index.html` in a web browser to run the application locally.
 
 ## Usage
 1. Open `index.html` in a browser.
@@ -43,7 +44,7 @@ https://rsa-algorithm-compression.netlify.app/
 
 ## File Structure
 - `index.html`: The main HTML file containing the UI and RSA logic.
-- (Add other files like `style.css` or `script.js` if applicable in your project.)
+
 
 ## Limitations
 - The demo is designed for educational purposes and uses small prime numbers for simplicity.
