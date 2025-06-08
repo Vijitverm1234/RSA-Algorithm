@@ -27,7 +27,7 @@ https://rsa-algorithm-compression.netlify.app/
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/rsa-algorithm-demo.git
+   git clone https://github.com/Vijitverm1234/RSA-Algorithm.git
    ```
 2. Navigate to the project directory:
    ```bash
